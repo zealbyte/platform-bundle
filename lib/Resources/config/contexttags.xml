@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<services>
+		<defaults public="false" />
+
+		<service id="ZealByte\Platform\Context\Tag\NameContextTag" public="false">
+			<argument>%platform.name%</argument>
+			<tag name="platform.contexttag" alias="name" />
+		</service>
+		<service id="platform.contexttag.name" alias="ZealByte\Platform\Context\Tag\NameContextTag" public="false" />
+
+		<service id="ZealByte\Platform\Context\Tag\DescriptionContextTag" public="false">
+			<tag name="platform.contexttag" alias="description" />
+		</service>
+		<service id="platform.contexttag.description" alias="ZealByte\Platform\Context\Tag\DescriptionContextTag" public="false" />
+
+		<service id="ZealByte\Platform\Context\Tag\TitleContextTag" public="false">
+			<argument>%platform.name%</argument>
+			<tag name="platform.contexttag" alias="title" />
+		</service>
+		<service id="platform.contexttag.title" alias="ZealByte\Platform\Context\Tag\TitleContextTag" public="false" />
+
+		<service id="ZealByte\Platform\Context\Tag\PackageContextTag" public="false">
+			<argument type="service" id="platform.asset_packages" />
+			<argument type="service" id="assets.packages" />
+			<argument type="service" id="assets.context" />
+			<tag name="platform.contexttag" alias="package" />
+		</service>
+		<service id="platform.contexttag.package" alias="ZealByte\Platform\Context\Tag\PackageContextTag" public="false" />
+
+		<service id="ZealByte\Platform\Context\Tag\ThemeContextTag" public="false">
+			<argument>%platform.theme%</argument>
+			<tag name="platform.contexttag" alias="theme" />
+		</service>
+		<service id="platform.contexttag.theme" alias="ZealByte\Platform\Context\Tag\ThemeContextTag" public="false" />
+
+	</services>
+</container>

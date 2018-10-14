@@ -1,0 +1,26 @@
+{
+	"name": "zealbyte/platform-bundle",
+	"type": "symfony-bundle",
+	"description": "ZealByte Platform Bundle",
+	"keywords": [],
+	"homepage": "https://zealbyte.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Dustin Martella",
+			"email": "dustin.martella@zealbyte.com"
+		}
+	],
+	"require": {
+		"php": "^7.1.3",
+		"symfony/framework-bundle": "~4.1",
+		"zealbyte/platform": "^0.1"
+	},
+	"autoload": {
+		"psr-4": { "ZealByte\\Bundle\\PlatformBundle\\": "lib" },
+		"exclude-from-classmap": [
+			"/tests/"
+		]
+	},
+	"minimum-stability": "dev"
+}

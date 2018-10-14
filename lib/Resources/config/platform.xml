@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<services>
+		<defaults public="false" />
+
+		<!-- Logging -->
+		<service id="ZealByte\Platform\Logger\Handler\FluentHandler" public="false">
+			<argument>%platform.logger.fluentd.address%</argument>
+			<argument>%platform.logger.fluentd.port%</argument>
+			<argument>%platform.logger.fluentd.level%</argument>
+			<argument>true</argument>
+		</service>
+
+		<!-- Asset Packages -->
+		<service id="ZealByte\Platform\Assets\PackageManager" public="false">
+			<argument type="service" id="assets.packages" />
+			<argument type="service" id="assets.context" />
+			<call method="setCachePath">
+				<argument>%kernel.cache_dir%</argument>
+			</call>
+		</service>
+		<service id="platform.asset_packages" alias="ZealByte\Platform\Assets\PackageManager" />
+
+		<service id="ZealByte\Platform\Assets\Repository\Repository" public="false">
+			<tag name="platform.asset_repository" priority="5" />
+		</service>
+
+		<service id="ZealByte\Platform\Assets\Repository\BowerRepository" public="false">
+			<argument>%platform.asset_packages.repository.bower.command_path%</argument>
+			<argument>%platform.asset_packages.repository.bower.command_arguments%</argument>
+			<argument>%kernel.project_dir%</argument>
+		</service>
+
+		<!-- Context -->
+		<service id="ZealByte\Platform\Context\Tag\ContextTagManager" public="true">
+		</service>
+
+		<service id="ZealByte\Platform\Context\ContextFactory" public="true">
+			<argument type="service" id="ZealByte\Platform\Context\Tag\ContextTagManager" />
+			<argument type="service" id="request_stack" />
+			<argument type="service" id="event_dispatcher" />
+		</service>
+
+		<service id="ZealByte\Platform\Context\ContextHandler" public="false">
+			<argument type="service" id="ZealByte\Platform\Context\ContextFactory" />
+			<argument type="service" id="twig" />
+			<argument>%platform.config.context.options%</argument>
+			<argument>%platform.config.context.default_view%</argument>
+		</service>
+
+		<service id="ZealByte\Platform\Twig\Extension\ZealBytePlatformExtension" public="false">
+			<argument type="service" id="ZealByte\Platform\Context\Tag\ContextTagManager" />
+			<tag name="twig.extension" />
+		</service>
+
+		<!-- Event Subscribers -->
+		<service id="ZealByte\Platform\EventListener\ContextResponseSubscriber" public="false">
+			<argument type="service" id="ZealByte\Platform\Context\ContextHandler" />
+			<tag name="kernel.event_subscriber" />
+		</service>
+
+		<service id="ZealByte\Platform\EventListener\NavigationSubscriber" public="false">
+			<argument type="service" id="platform.contexttag.title" on-invalid="ignore" />
+			<argument type="service" id="ZealByte\Bundle\MenuBundle\Twig\MenuHelper" on-invalid="ignore" />
+			<tag name="kernel.event_subscriber" />
+		</service>
+
+		<!-- Form Extensions -->
+		<service id="ZealByte\Platform\Form\Extension\HelpLink\Type\FormHelpLinkTypeExtension">
+			<argument type="service" id="router" />
+			<tag name="form.type_extension" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType" />
+		</service>
+
+		<service id="ZealByte\Platform\Form\Extension\ValidationMessage\Type\ValidationMessageTypeExtension">
+			<argument type="service" id="messages" />
+			<argument type="service" id="translator" on-invalid="null" />
+			<tag name="form.type_extension" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType" />
+		</service>
+
+		<!-- Console Commands -->
+		<service id="ZealByte\Platform\Command\BuildPackageCacheCommand" public="false">
+			<argument type="service" id="platform.asset_packages" />
+			<tag name="console.command" />
+		</service>
+
+		<!-- Cache Warmer -->
+		<service id="ZealByte\Platform\Cache\PackageCacheWarmer" public="false">
+			<argument type="service" id="platform.asset_packages" />
+			<tag name="kernel.cache_warmer" priority="20" />
+		</service>
+
+		<!-- Menu Builder -->
+		<service id="ZealByte\Bundle\PlatformBundle\Menu\RouteOptionMenuBuilder" public="false">
+			<argument type="service" id="router" />
+			<argument type="service" id="translator" on-invalid="ignore" />
+			<argument type="service" id="security.authorization_checker" on-invalid="ignore" />
+			<tag name="menu.builder" menu="navigation" />
+		</service>
+
+		<!-- Routing -->
+		<service id="ZealByte\Bundle\PlatformBundle\Routing\RouteLoader" public="false">
+			<argument type="service" id="file_locator" />
+			<tag name="routing.loader" />
+		</service>
+
+	</services>
+</container>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xsd:schema xmlns="http://martellalabs.com/zealbyte/schema/dic/platform"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://martellalabs.com/zealbyte/schema/dic/platform"
+	elementFormDefault="qualified">
+
+	<xsd:element name="config" type="config" />
+
+	<xsd:complexType name="config">
+		<xsd:choice minOccurs="0" maxOccurs="1">
+			<xsd:element name="name" type="xsd:string" minOccurs="1" />
+			<xsd:element name="theme" type="xsd:string" minOccurs="1" />
+			<xsd:element name="context" type="context" />
+			<xsd:element name="package_manager" type="package-manager" />
+			<xsd:element name="bower" type="bower" />
+			<xsd:element name="packages" type="packages" />
+		</xsd:choice>
+	</xsd:complexType>
+
+	<xsd:complexType name="context">
+		<xsd:element name="default_view" type="xsd:string" />
+		<xsd:element name="options" type="options" />
+	</xsd:complexType>
+
+	<xsd:complexType name="options">
+		<xsd:sequence>
+      <xsd:element name="view" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:element name="package" type="dependency-list" minOccurs="1" maxOccurs="1" />
+		</xsd:sequence>
+
+		<xsd:attribute name="context" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="package_manager">
+		<xsd:element name="prefix" type="xsd:string" />
+		<xsd:element name="ignore" type="dependency-list" />
+	</xsd:complexType>
+
+	<xsd:complexType name="bower">
+		<xsd:element name="enabled" type="xsd:boolean" />
+		<xsd:element name="bin_path" type="xsd:string" />
+		<xsd:element name="list_args" type="xsd:string" />
+		<xsd:element name="working_directory" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="packages">
+		<xsd:sequence>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:element name="version" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:element name="baseurl" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:element name="basedir" type="xsd:string" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="files" type="file-list" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="dependencies" type="dependency-list" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="dependency-list">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="file-list">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
